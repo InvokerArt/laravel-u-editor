@@ -1,4 +1,4 @@
-<?php namespace Stevenyangecho\UEditor;
+<?php namespace InvokerArt\UEditor;
 
 
 use Illuminate\Support\ServiceProvider;

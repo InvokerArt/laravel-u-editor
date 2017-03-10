@@ -40,14 +40,14 @@ UEditor 前台文件完全无修改,可自由gulp等工具部署到生产环境
 To get the latest version of Laravel Exceptions, simply add the following line to the require block of your `composer.json` file:
 
 ```
-"stevenyangecho/laravel-u-editor": "~1.4"
+"InvokerArt/laravel-u-editor": "~1.4"
 ```
 
 You'll then need to run `composer install` or `composer update` to download it and have the autoloader updated.
 
 Once Laravel Exceptions is installed, you need to register the service provider. Open up `config/app.php` and add the following to the `providers` key.
 
-* `'Stevenyangecho\UEditor\UEditorServiceProvider'`
+* `'InvokerArt\UEditor\UEditorServiceProvider'`
 
 then run 
 

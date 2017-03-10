@@ -9,9 +9,10 @@ UEditor 前台文件完全无修改,可自由gulp等工具部署到生产环境
  
 根据系统的config.app.locale自动切换多语言. 暂时只支持 en,zh_CN,zh_TW
 
-支持本地和七牛云存储,默认为本地上传 public/uploads
+支持本地、Storage存储、七牛云存储,默认为本地上传 public/uploads
 
 ##ChangeLog
+ 2.0.0 版  支持 laravel5.4 增加Laravel Storage存储
  1.4.0 版  支持 laravel5.3 更新百度 UEditor 1.4.3.3
 
  1.3.0 版  改变服务器请求路由 为 /laravel-u-editor-server/server 

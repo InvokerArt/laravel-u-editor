@@ -1,5 +1,8 @@
-<?php namespace InvokerArt\UEditor\Uploader;
+<?php
 
+namespace Stevenyangecho\UEditor\Uploader;
+
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 /**
@@ -7,7 +10,7 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
  * 文件上传抽象类
  *
  *
- * @package InvokerArt\UEditor\Uploader
+ * @package Stevenyangecho\UEditor\Uploader
  */
 abstract class Upload
 {
@@ -23,16 +26,16 @@ abstract class Upload
     protected $fileType; //文件类型
     protected $stateInfo; //上传状态信息,
     protected $stateMap; //上传状态映射表，国际化用户需考虑此处数据的国际化
-    abstract function doUpload(); //抽象方法,上传核心方法
+    abstract public function doUpload(); //抽象方法,上传核心方法
 
     public function __construct(array $config, $request)
     {
         $this->config = $config;
         $this->request = $request;
         $this->fileField = $this->config['fieldName'];
-        if(isset($config['allowFiles'])){
+        if (isset($config['allowFiles'])) {
             $this->allowFiles=$config['allowFiles'];
-        }else{
+        } else {
             $this->allowFiles=[];
         }
 
@@ -58,7 +61,6 @@ abstract class Upload
             "ERROR_UNKNOWN_MODE" =>  trans("UEditor::upload.ERROR_UNKNOWN_MODE"),
         ];
         $this->stateMap=$stateMap;
-
     }
 
     /**
@@ -89,7 +91,7 @@ abstract class Upload
      * 文件大小检测
      * @return bool
      */
-    protected function  checkSize()
+    protected function checkSize()
     {
         return $this->fileSize <= ($this->config["maxSize"]);
     }
@@ -145,12 +147,13 @@ abstract class Upload
     {
         $fullName = $this->fullName;
 
-        $rootPath = public_path();
+        if (config('UEditorUpload.core.mode') == 'public') {
+            $fullName = '/public'.$fullName;
+        }
 
         $fullName = ltrim($fullName, '/');
 
-
-        return $rootPath . '/' . $fullName;
+        return $fullName;
     }
     /**
      * 文件类型检测
@@ -167,14 +170,19 @@ abstract class Upload
      */
     public function getFileInfo()
     {
+        if (config('UEditorUpload.core.mode') == 'public') {
+            $url = env('APP_URL').Storage::url($this->filePath);
+        } else {
+            $url = $this->fullName;
+        }
+        
         return array(
             "state" => $this->stateInfo,
-            "url" => $this->fullName,
+            "url" => $url,
             "title" => $this->fileName,
             "original" => $this->oriName,
             "type" => $this->fileType,
             "size" => $this->fileSize
         );
     }
-
 }

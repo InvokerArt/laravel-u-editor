@@ -1,4 +1,6 @@
-<?php namespace InvokerArt\UEditor;
+<?php 
+
+namespace Stevenyangecho\UEditor;
 
 use \Qiniu\Storage\BucketManager;
 use \Qiniu\Auth;
@@ -6,7 +8,7 @@ use \Qiniu\Auth;
 /**
  * 列表文件 for 七牛
  * Class ListsQiniu
- * @package InvokerArt\UEditor
+ * @package Stevenyangecho\UEditor
  */
 class ListsQiniu
 {
@@ -14,7 +16,7 @@ class ListsQiniu
     {
         $this->allowFiles = substr(str_replace(".", "|", join("", $allowFiles)), 1);
         $this->listSize = $listSize;
-        $this->path = ltrim($path,'/');
+        $this->path = ltrim($path, '/');
         $this->request = $request;
     }
 
@@ -35,7 +37,7 @@ class ListsQiniu
                 "total" => 0
             ];
         }
-        if(empty($items)){
+        if (empty($items)) {
             return [
                 "state" => "no match file",
                 "list" => array(),
@@ -45,15 +47,15 @@ class ListsQiniu
         }
 
         $files=[];
-        foreach ($items as  $v) {
+        foreach ($items as $v) {
             if (preg_match("/\.(" . $this->allowFiles . ")$/i", $v['key'])) {
                 $files[] = array(
-                    'url' =>rtrim(config('UEditorUpload.core.qiniu.url'),'/').'/'.$v['key'],
+                    'url' => rtrim(config('UEditorUpload.core.qiniu.url'), '/').'/'.$v['key'],
                     'mtime' => $v['mimeType'],
                 );
             }
         }
-        if(empty($files)){
+        if (empty($files)) {
             return [
                 "state" => "no match file",
                 "list" => array(),
@@ -78,11 +80,14 @@ class ListsQiniu
      * @param array $files
      * @return array
      */
-    protected function  getfiles($path, $allowFiles, &$files = array())
+    protected function getfiles($path, $allowFiles, &$files = array())
     {
-
-        if (!is_dir($path)) return null;
-        if (substr($path, strlen($path) - 1) != '/') $path .= '/';
+        if (!is_dir($path)) {
+            return null;
+        }
+        if (substr($path, strlen($path) - 1) != '/') {
+            $path .= '/';
+        }
         $handle = opendir($path);
         while (false !== ($file = readdir($handle))) {
             if ($file != '.' && $file != '..') {
@@ -101,5 +106,4 @@ class ListsQiniu
         }
         return $files;
     }
-
 }

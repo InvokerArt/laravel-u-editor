@@ -1,14 +1,17 @@
-<?php namespace InvokerArt\UEditor\Uploader;
+<?php
 
-use InvokerArt\UEditor\Uploader\Upload;
+namespace Stevenyangecho\UEditor\Uploader;
+
+use Stevenyangecho\UEditor\Uploader\Upload;
 
 /**
  * Class UploadCatch
  * 图片远程抓取
  *
- * @package InvokerArt\UEditor\Uploader
+ * @package Stevenyangecho\UEditor\Uploader
  */
-class UploadCatch  extends Upload{
+class UploadCatch extends Upload
+{
     use UploadQiniu;
 
     public function doUpload()
@@ -30,7 +33,7 @@ class UploadCatch  extends Upload{
 
         //格式验证(扩展名验证和Content-Type验证)
         $fileType = strtolower(strrchr($imgUrl, '.'));
-        if (!in_array($fileType, $this->config['allowFiles']) ) {
+        if (!in_array($fileType, $this->config['allowFiles'])) {
             $this->stateInfo = $this->getStateInfo("ERROR_HTTP_CONTENTTYPE");
             return false;
         }
@@ -69,12 +72,12 @@ class UploadCatch  extends Upload{
         }
 
 
-        if(config('UEditorUpload.core.mode')=='local'){
+        if (config('UEditorUpload.core.mode') == 'local' || config('UEditorUpload.core.mode') == 'public') {
             //创建目录失败
             if (!file_exists($dirname) && !mkdir($dirname, 0777, true)) {
                 $this->stateInfo = $this->getStateInfo("ERROR_CREATE_DIR");
                 return false;
-            } else if (!is_writeable($dirname)) {
+            } elseif (!is_writeable($dirname)) {
                 $this->stateInfo = $this->getStateInfo("ERROR_DIR_NOT_WRITEABLE");
                 return false;
             }
@@ -87,18 +90,12 @@ class UploadCatch  extends Upload{
                 $this->stateInfo = $this->stateMap[0];
                 return true;
             }
-        }else if(config('UEditorUpload.core.mode')=='qiniu'){
-
-            return $this->uploadQiniu($this->filePath,$img);
-
-        }else{
+        } elseif (config('UEditorUpload.core.mode') == 'qiniu') {
+            return $this->uploadQiniu($this->filePath, $img);
+        } else {
             $this->stateInfo = $this->getStateInfo("ERROR_UNKNOWN_MODE");
             return false;
         }
-
-
-
-
     }
 
     /**

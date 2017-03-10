@@ -1,7 +1,9 @@
-<?php namespace InvokerArt\UEditor;
+<?php 
 
+namespace Stevenyangecho\UEditor;
 
 use Illuminate\Support\ServiceProvider;
+
 class UEditorServiceProvider extends ServiceProvider
 {
 
@@ -21,8 +23,6 @@ class UEditorServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
-
         $viewPath = realpath(__DIR__ . '/../resources/views');
         $this->loadViewsFrom($viewPath, 'UEditor');
         $this->publishes([
@@ -34,9 +34,7 @@ class UEditorServiceProvider extends ServiceProvider
             realpath(__DIR__ . '/../resources/public') => public_path() . '/laravel-u-editor',
         ], 'assets');
 
-
         $this->loadTranslationsFrom(realpath(__DIR__ . '/../resources/lang'), 'UEditor');
-
 
         //定义多语言
         //根据系统配置 取得 local
@@ -55,7 +53,6 @@ class UEditorServiceProvider extends ServiceProvider
         $config = config('UEditorUpload.core.route', []);
         $config['namespace'] = __NAMESPACE__;
 
-
         //定义路由
         $router->group($config, function ($router) {
             $router->any('/laravel-u-editor-server/server', 'Controller@server');
@@ -73,18 +70,5 @@ class UEditorServiceProvider extends ServiceProvider
         $configPath = realpath(__DIR__ . '/../config/UEditorUpload.php');
         $this->mergeConfigFrom($configPath, 'UEditorUpload');
         $this->publishes([$configPath => config_path('UEditorUpload.php')], 'config');
-
     }
-
-
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
-    {
-
-    }
-
 }

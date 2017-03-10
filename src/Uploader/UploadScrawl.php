@@ -1,16 +1,17 @@
-<?php namespace InvokerArt\UEditor\Uploader;
+<?php 
 
-use InvokerArt\UEditor\Uploader\Upload;
+namespace Stevenyangecho\UEditor\Uploader;
+
+use Stevenyangecho\UEditor\Uploader\Upload;
 
 /**
  * Class UploadScrawl
  * 涂鸦上传
- * @package InvokerArt\UEditor\Uploader
+ * @package Stevenyangecho\UEditor\Uploader
  */
 class UploadScrawl extends Upload
 {
     use UploadQiniu;
-
 
     public function doUpload()
     {
@@ -43,13 +44,12 @@ class UploadScrawl extends Upload
             return false;
         }
 
-
-        if(config('UEditorUpload.core.mode')=='local'){
+        if (config('UEditorUpload.core.mode') == 'local' || config('UEditorUpload.core.mode') == 'public') {
             //创建目录失败
             if (!file_exists($dirname) && !mkdir($dirname, 0777, true)) {
                 $this->stateInfo = $this->getStateInfo("ERROR_CREATE_DIR");
                 return false;
-            } else if (!is_writeable($dirname)) {
+            } elseif (!is_writeable($dirname)) {
                 $this->stateInfo = $this->getStateInfo("ERROR_DIR_NOT_WRITEABLE");
                 return false;
             }
@@ -61,24 +61,13 @@ class UploadScrawl extends Upload
                 $this->stateInfo = $this->stateMap[0];
                 return false;
             }
-
-        }else if(config('UEditorUpload.core.mode')=='qiniu'){
-
-
-            return $this->uploadQiniu($this->filePath,$img);
-
-        }else{
+        } elseif (config('UEditorUpload.core.mode') == 'qiniu') {
+            return $this->uploadQiniu($this->filePath, $img);
+        } else {
             $this->stateInfo = $this->getStateInfo("ERROR_UNKNOWN_MODE");
             return false;
         }
-
-
-
-
-
-
     }
-
 
     /**
      * 获取文件扩展名

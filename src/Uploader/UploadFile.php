@@ -1,6 +1,9 @@
-<?php namespace InvokerArt\UEditor\Uploader;
+<?php
 
-use InvokerArt\UEditor\Uploader\Upload;
+namespace Stevenyangecho\UEditor\Uploader;
+
+use Illuminate\Support\Facades\Storage;
+use Stevenyangecho\UEditor\Uploader\Upload;
 
 /**
  *
@@ -9,13 +12,13 @@ use InvokerArt\UEditor\Uploader\Upload;
  *
  * 文件/图像普通上传
  *
- * @package InvokerArt\UEditor\Uploader
+ * @package Stevenyangecho\UEditor\Uploader
  */
-class UploadFile  extends Upload{
+class UploadFile extends Upload
+{
     use UploadQiniu;
     public function doUpload()
     {
-
 
         $file = $this->request->file($this->fileField);
         if (empty($file)) {
@@ -25,21 +28,14 @@ class UploadFile  extends Upload{
         if (!$file->isValid()) {
             $this->stateInfo = $this->getStateInfo($file->getError());
             return false;
-
         }
 
         $this->file = $file;
-
         $this->oriName = $this->file->getClientOriginalName();
-
         $this->fileSize = $this->file->getSize();
         $this->fileType = $this->getFileExt();
-
         $this->fullName = $this->getFullName();
-
-
         $this->filePath = $this->getFilePath();
-
         $this->fileName = basename($this->filePath);
 
 
@@ -54,31 +50,32 @@ class UploadFile  extends Upload{
             return false;
         }
 
-        if(config('UEditorUpload.core.mode')=='local'){
+        if (config('UEditorUpload.core.mode') == 'local') {
             try {
                 $this->file->move(dirname($this->filePath), $this->fileName);
-
                 $this->stateInfo = $this->stateMap[0];
-
             } catch (FileException $exception) {
                 $this->stateInfo = $this->getStateInfo("ERROR_WRITE_CONTENT");
+
                 return false;
             }
+        } elseif (config('UEditorUpload.core.mode') == 'public') {
+            try {
+                Storage::put($this->filePath, file_get_contents($this->file->getPathname()));
+                $this->stateInfo = $this->stateMap[0];
+            } catch (FileException $exception) {
+                $this->stateInfo = $this->getStateInfo("ERROR_WRITE_CONTENT");
 
-        }else if(config('UEditorUpload.core.mode')=='qiniu'){
-
+                return false;
+            }
+        } elseif (config('UEditorUpload.core.mode') == 'qiniu') {
             $content=file_get_contents($this->file->getPathname());
-            return $this->uploadQiniu($this->filePath,$content);
-
-        }else{
+            return $this->uploadQiniu($this->filePath, $content);
+        } else {
             $this->stateInfo = $this->getStateInfo("ERROR_UNKNOWN_MODE");
+
             return false;
         }
-
-
-
-
         return true;
-
     }
 }

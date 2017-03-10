@@ -1,4 +1,6 @@
-<?php namespace InvokerArt\UEditor\Uploader;
+<?php
+
+namespace Stevenyangecho\UEditor\Uploader;
 
 use \Qiniu\Storage\UploadManager;
 use \Qiniu\Auth;
@@ -10,25 +12,10 @@ use \Qiniu\Auth;
  *
  * 七牛 上传 类
  *
- * @package InvokerArt\UEditor\Uploader
+ * @package Stevenyangecho\UEditor\Uploader
  */
 trait UploadQiniu
 {
-    /**
-     * 获取文件路径
-     * @return string
-     */
-    protected function getFilePath()
-    {
-        $fullName = $this->fullName;
-
-
-        $fullName = ltrim($fullName, '/');
-
-
-        return $fullName;
-    }
-
     public function uploadQiniu($key, $content)
     {
         $upManager = new UploadManager();
@@ -40,11 +27,12 @@ trait UploadQiniu
             $this->stateInfo= $error->message();
         } else {
             //change $this->fullName ,return the url
-            $url=rtrim(strtolower(config('UEditorUpload.core.qiniu.url')),'/');
+            $url = rtrim(strtolower(config('UEditorUpload.core.qiniu.url')), '/');
             $fullName = ltrim($this->fullName, '/');
-            $this->fullName=$url.'/'.$fullName;
+            $this->fullName = $url.'/'.$fullName;
             $this->stateInfo = $this->stateMap[0];
         }
+        
         return true;
     }
 }

@@ -1,22 +1,16 @@
-<?php namespace InvokerArt\UEditor;
+<?php
+
+namespace Stevenyangecho\UEditor;
 
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
-use InvokerArt\UEditor\Uploader\UploadScrawl;
-use InvokerArt\UEditor\Uploader\UploadFile;
-use InvokerArt\UEditor\Uploader\UploadCatch;
+use Stevenyangecho\UEditor\Uploader\UploadScrawl;
+use Stevenyangecho\UEditor\Uploader\UploadFile;
+use Stevenyangecho\UEditor\Uploader\UploadCatch;
 
 class Controller extends BaseController
 {
-
-
-    public function __construct()
-    {
-
-    }
-
-
     public function server(Request $request)
     {
         $config = config('UEditorUpload.upload');
@@ -25,7 +19,6 @@ class Controller extends BaseController
 
 
         switch ($action) {
-
             case 'config':
                 $result = $config;
                 break;
@@ -73,22 +66,25 @@ class Controller extends BaseController
 
             /* 列出图片 */
             case 'listimage':
-
-
                 if (config('UEditorUpload.core.mode') == 'local') {
                     $result = with(new Lists(
                         $config['imageManagerAllowFiles'],
                         $config['imageManagerListSize'],
                         $config['imageManagerListPath'],
                         $request))->getList();
-                } else if (config('UEditorUpload.core.mode') == 'qiniu') {
+                } elseif (config('UEditorUpload.core.mode') == 'public') {
+                    $result = with(new Storage(
+                        $config['imageManagerAllowFiles'],
+                        $config['imageManagerListSize'],
+                        $config['imageManagerListPath'],
+                        $request))->getList();
+                } elseif (config('UEditorUpload.core.mode') == 'qiniu') {
                     $result = with(new ListsQiniu(
                         $config['imageManagerAllowFiles'],
                         $config['imageManagerListSize'],
                         $config['imageManagerListPath'],
                         $request))->getList();
                 }
-
 
                 break;
             /* 列出文件 */
@@ -99,7 +95,13 @@ class Controller extends BaseController
                         $config['fileManagerListSize'],
                         $config['fileManagerListPath'],
                         $request))->getList();
-                }else if (config('UEditorUpload.core.mode') == 'qiniu') {
+                } elseif (config('UEditorUpload.core.mode') == 'qiniu') {
+                    $result = with(new ListsQiniu(
+                        $config['fileManagerAllowFiles'],
+                        $config['fileManagerListSize'],
+                        $config['fileManagerListPath'],
+                        $request))->getList();
+                } elseif (config('UEditorUpload.core.mode') == 'qiniu') {
                     $result = with(new ListsQiniu(
                         $config['fileManagerAllowFiles'],
                         $config['fileManagerListSize'],
@@ -108,10 +110,8 @@ class Controller extends BaseController
                 }
 
                 break;
-
             /* 抓取远程文件 */
             case 'catchimage':
-
                 $upConfig = array(
                     "pathFormat" => $config['catcherPathFormat'],
                     "maxSize" => $config['catcherMaxSize'],
@@ -140,13 +140,9 @@ class Controller extends BaseController
                     'list' => $list
                 ];
 
-
                 break;
         }
-
+        
         return response()->json($result, 200, [], JSON_UNESCAPED_UNICODE);
-
     }
-
-
 }

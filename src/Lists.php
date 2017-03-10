@@ -1,6 +1,6 @@
 <?php
 
-namespace Stevenyangecho\UEditor;
+namespace InvokerArt\UEditor;
 
 class Lists
 {

@@ -1,14 +1,14 @@
 <?php
 
-namespace Stevenyangecho\UEditor\Uploader;
+namespace InvokerArt\UEditor\Uploader;
 
-use Stevenyangecho\UEditor\Uploader\Upload;
+use InvokerArt\UEditor\Uploader\Upload;
 
 /**
  * Class UploadCatch
  * 图片远程抓取
  *
- * @package Stevenyangecho\UEditor\Uploader
+ * @package InvokerArt\UEditor\Uploader
  */
 class UploadCatch extends Upload
 {

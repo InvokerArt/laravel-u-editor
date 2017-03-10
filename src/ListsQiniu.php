@@ -1,6 +1,6 @@
 <?php 
 
-namespace Stevenyangecho\UEditor;
+namespace InvokerArt\UEditor;
 
 use \Qiniu\Storage\BucketManager;
 use \Qiniu\Auth;
@@ -8,7 +8,7 @@ use \Qiniu\Auth;
 /**
  * 列表文件 for 七牛
  * Class ListsQiniu
- * @package Stevenyangecho\UEditor
+ * @package InvokerArt\UEditor
  */
 class ListsQiniu
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Stevenyangecho\UEditor\Uploader;
+namespace InvokerArt\UEditor\Uploader;
 
 use \Qiniu\Storage\UploadManager;
 use \Qiniu\Auth;
@@ -12,7 +12,7 @@ use \Qiniu\Auth;
  *
  * 七牛 上传 类
  *
- * @package Stevenyangecho\UEditor\Uploader
+ * @package InvokerArt\UEditor\Uploader
  */
 trait UploadQiniu
 {
